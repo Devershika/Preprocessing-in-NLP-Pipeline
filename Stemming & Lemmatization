@@ -1,0 +1,29 @@
+# Import libraries
+import nltk
+from nltk.stem import PorterStemmer
+import spacy
+
+# Download necessary NLTK resource
+nltk.download('punkt')
+
+# Initialize stemmer
+stemmer = PorterStemmer()
+
+# Load spaCy model for lemmatization
+nlp = spacy.load("en_core_web_sm")
+
+# List of words to process
+words = ["Playing", "Studies", "Happier", "Knives", "Children", "Easily", "Faster", "Caring"]
+
+print("{:<15} {:<15} {:<15}".format("Original", "Stemmed", "Lemmatized"))
+print("-" * 45)
+
+for word in words:
+    # Stemming
+    stemmed = stemmer.stem(word)
+
+    # Lemmatization using spaCy
+    doc = nlp(word)
+    lemmatized = doc[0].lemma_
+
+    print("{:<15} {:<15} {:<15}".format(word, stemmed, lemmatized))

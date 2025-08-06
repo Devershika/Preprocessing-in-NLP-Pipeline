@@ -1,7 +1,0 @@
-# Import libraries
-import nltk
-from nltk.stem import PorterStemmer
-import spacy
-
-# Download necessary NLTK resource
-nltk.download('punkt')
