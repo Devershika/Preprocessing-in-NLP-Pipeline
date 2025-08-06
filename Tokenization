@@ -4,3 +4,14 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 
 nltk.download('punkt')
 nltk.download('punkt_tab')
+text = "Natural Language Processing is fascinating! It enables machines to understand human language."
+
+# Sentence Tokenization
+sentences = sent_tokenize(text)
+print("Sentence-level Tokenization:")
+print(sentences)
+
+# Word Tokenization
+words = word_tokenize(text)
+print("\nWord-level Tokenization:")
+print(words)
