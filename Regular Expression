@@ -1,1 +1,21 @@
+import re
+text = "Please contact us at support@example.com, info@nlp.com, or feedback123@textai.org for further details."
+emails = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", text)
+print("Extracted Emails:", emails)
 
+text = "The meeting is scheduled for 10:30 AM on 25th January 2025."
+replaced_text = re.sub(r"\d", "*", text)
+print("Digits Replaced:", replaced_text)
+
+text = "Important dates are 25-01-2025, 26/01/2025, and 27-01-2025."
+dates = re.findall(r"\b\d{2}[-/]\d{2}[-/]\d{4}\b", text)
+print("Extracted Dates:", dates)
+
+def is_valid_indian_phone(number):
+    pattern = r"^[789]\d{9}$"
+    return bool(re.match(pattern, number))
+
+# Test cases
+test_numbers = ["9876543210", "8123456789", "6123456789", "1234567890"]
+for num in test_numbers:
+    print(f"{num} is valid: {is_valid_indian_phone(num)}")
