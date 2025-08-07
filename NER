@@ -9,3 +9,16 @@ doc = nlp(text)
 entities = [(ent.text, ent.label_) for ent in doc.ents]
 df = pd.DataFrame(entities, columns=["Entity", "Entity Type"])
 print(df)
+
+from termcolor import colored
+
+def highlight_entities(text):
+    doc = nlp(text)
+    for ent in doc.ents:
+        if ent.label_ in ["PERSON", "ORG", "DATE"]:
+            print(colored(f"{ent.text} ({ent.label_})", "green"))
+        else:
+            print(ent.text, f"({ent.label_})")
+
+# Example usage
+highlight_entities("Elon Musk founded SpaceX in 2002 and later acquired Twitter, now known as X, in 2022.")
