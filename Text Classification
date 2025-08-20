@@ -17,3 +17,44 @@ splits = {'train': 'data/train-00000-of-00001.parquet', 'test': 'data/test-00000
 df_train = pd.read_parquet("hf://datasets/wangrongsheng/ag_news/" + splits["train"])
 df_test = pd.read_parquet("hf://datasets/wangrongsheng/ag_news/" + splits["test"])
 
+df_train.head()
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10,6))
+plt.bar(['World','Sports','Business','Sci/Tech'],
+        df_train['label'].value_counts().values)
+plt.show()
+
+def clean_text(text):
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    text = text.lower()
+    #text = re.sub(r'http\S+\www\S+\https\S+', '', text)
+    text = contractions.fix(text)
+    text = BeautifulSoup(text, "html.parser").get_text()
+    text = re.sub(r'\d+', '', text)
+    text = ' '.join(text.split())
+
+    stopwrd = set(stopwords.words('english'))
+    text = ' '.join([word for word in text.split() if word not in stopwrd])
+
+    text = emoji.demojize(text)
+    return text
+
+
+df_train['clean_text'] = df_train['text'].apply(clean_text)
+df_test['clean_text'] = df_test['text'].apply(clean_text)
+
+
+df_train.head()
+
+from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+
