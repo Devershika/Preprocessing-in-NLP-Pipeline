@@ -20,3 +20,25 @@ vocab = list(set(tokens))
 word_to_ix = {word: i for i, word in enumerate(vocab)}
 ix_to_word = {i: word for word, i in word_to_ix.items()}
 
+def create_cbow_dataset(tokens, window_size=2):
+  data = []
+  for i in range(window_size, len(tokens) - window_size):
+    context = [tokens[j] for j in range(i - window_size, i + window_size + 1) if j != i]
+    target = tokens[i]
+    data.append((context, target))
+  return data[:100000]
+
+data_trial = create_cbow_dataset(['today','is','a','pleasant','day','sir'])
+print(data_trial)
+
+class CBOWModel(nn.Module):
+  def __init__(self, vocab_size, embedding_dim):
+    super(CBOWModel, self).__init__()
+    self.embeddings = nn.Embedding(vocab_size, embedding_dim)
+    self.linear = nn.Linear(embedding_dim, vocab_size)
+
+  def forward(self, context_idxs):
+    embeds = self.embeddings(context_idxs)
+    avg_embed = embeds.mean(dim=1)
+    out = self.linear(avg_embed)
+    return out
