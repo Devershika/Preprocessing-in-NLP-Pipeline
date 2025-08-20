@@ -42,3 +42,49 @@ class CBOWModel(nn.Module):
     avg_embed = embeds.mean(dim=1)
     out = self.linear(avg_embed)
     return out
+
+def train_cbow(model, data, epochs=5, lr=0.01):
+  loss_fn = nn.CrossEntropyLoss()
+  optimizer = optim.SGD(model.parameters(), lr=lr)
+
+  for epoch in range(epochs):
+    total_loss = 0
+    random.shuffle(data)
+    for context, target in data:
+      context_idxs = torch.tensor([[word_to_ix[w] for w in context]], dtype=torch.long)
+      target_idx = torch.tensor([word_to_ix[target]], dtype=torch.long)
+
+      output = model(context_idxs)
+      loss = loss_fn(output, target_idx)
+
+      optimizer.zero_grad()
+      loss.backward()
+      optimizer.step()
+
+      total_loss += loss.item()
+
+    print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss: .2f}")
+
+def cosine_similarity(vec1, vec2):
+  vec1 = vec1 / (vec1.norm() + 1e-9)
+  vec2 = vec2 / (vec2.norm() + 1e-9)
+  return torch.dot(vec1, vec2).item()
+
+def word_similarity(word1, word2, model):
+  if word1 not in word_to_ix or word2 not in word_to_ix:
+    return None
+  idx1 = torch.tensor(word_to_ix[word1])
+  idx2 = torch.tensor(word_to_ix[word2])
+  vec1 = model.embeddings(idx1)
+  vec2 = model.embeddings(idx2)
+  return cosine_similarity(vec1, vec2)
+
+embedding_dim = 100
+cbow_model = CBOWModel(len(vocab), embedding_dim)
+cbow_data = create_cbow_dataset(tokens, window_size=2)
+train_cbow(cbow_model, cbow_data, epochs=10, lr=0.05)
+
+print("\nSimilarity examples:")
+print("love vs affection:", word_similarity("love", "affection", cbow_model))
+print("mrs vs women:", word_similarity("mrs", "women", cbow_model))
+print("book vs letter:", word_similarity("book", "letter", cbow_model))
