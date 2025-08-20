@@ -91,3 +91,11 @@ from transformers import BertTokenizer, BertForSequenceClassification
 from transformers import Trainer, TrainingArguments
 from datasets import Dataset
 import evaluate
+
+num_labels = len(df_train['label'].unique())
+print(num_labels)
+train_ds = Dataset.from_pandas(df_train[['clean_text','label']])
+test_ds = Dataset.from_pandas(df_test[['clean_text','label']])
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=num_labels)
