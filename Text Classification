@@ -1,1 +1,19 @@
 pip install emoji contractions -qq
+
+import nltk
+import pandas as pd
+import re
+import string
+import numpy as np
+nltk.download('all')
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+import emoji
+import contractions
+from bs4 import BeautifulSoup
+from textblob import TextBlob
+
+splits = {'train': 'data/train-00000-of-00001.parquet', 'test': 'data/test-00000-of-00001.parquet'}
+df_train = pd.read_parquet("hf://datasets/wangrongsheng/ag_news/" + splits["train"])
+df_test = pd.read_parquet("hf://datasets/wangrongsheng/ag_news/" + splits["test"])
+
