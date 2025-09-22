@@ -52,3 +52,82 @@ print(feature_names)
 
 print("\nTF-IDF Matrix:")
 print(tfidf_matrix)
+
+##Part C: Word2Vec
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize
+import nltk
+
+# Download NLTK tokenizer models
+nltk.download('punkt')
+
+# Sentences
+sentences = [
+    "Deep learning algorithms are changing the world.",
+    "Natural language understanding is an important field in AI.",
+    "Machine learning is used in many industries."
+]
+
+# Tokenize sentences
+tokenized_sentences = [word_tokenize(sentence.lower()) for sentence in sentences]
+
+# Train Word2Vec model
+model = Word2Vec(sentences=tokenized_sentences, vector_size=50, window=3, min_count=1, workers=4)
+
+# Most similar words to "learning"
+similar_words = model.wv.most_similar("learning", topn=5)
+print("Most similar words to 'learning':")
+print(similar_words)
+
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+# Words to visualize
+words = ["machine", "learning", "ai"]
+word_vectors = [model.wv[word] for word in words]
+
+# Reduce dimensions using PCA
+pca = PCA(n_components=2)
+vectors_2d = pca.fit_transform(word_vectors)
+
+# Plot
+plt.figure(figsize=(6,6))
+for i, word in enumerate(words):
+    plt.scatter(vectors_2d[i,0], vectors_2d[i,1])
+    plt.text(vectors_2d[i,0]+0.01, vectors_2d[i,1]+0.01, word, fontsize=12)
+plt.title("Word Embeddings Visualization (PCA)")
+plt.show()
+
+from gensim.models import KeyedVectors
+
+def word_cosine_similarity(model_path, word1, word2):
+    """
+    Loads a pre-trained Word2Vec model and computes cosine similarity between two words.
+    
+    Parameters:
+    - model_path: path to the Word2Vec model
+    - word1, word2: words to compute similarity
+    
+    Returns:
+    - similarity score (float)
+    """
+    # Load pre-trained model
+    model = KeyedVectors.load(model_path, mmap='r')
+    
+    # Compute similarity
+    similarity = model.similarity(word1, word2)
+    return similarity
+
+# Save the trained model
+model.save("my_word2vec.model")
+
+# Load the model later
+loaded_model = Word2Vec.load("my_word2vec.model")
+
+# Example: compute similarity between two words
+similarity_score = loaded_model.wv.similarity("ai", "learning")
+print("Cosine similarity between 'ai' and 'learning':", similarity_score)
+# Most similar words to 'machine'
+print(loaded_model.wv.most_similar("machine", topn=5))
+
+
