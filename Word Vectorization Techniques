@@ -1,4 +1,4 @@
-Part A: Count Vectorizer
+##Part A: Count Vectorizer
 
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -24,3 +24,31 @@ print(feature_names)
 
 print("\nWord Count Matrix:")
 print(word_count_matrix)
+
+
+##Part B: TF-IDF Vectorizer
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# List of sentences/documents
+documents = [
+    "Natural language processing is exciting.",
+    "Text analysis is crucial in data science.",
+    "Deep learning models improve NLP tasks."
+]
+
+# Initialize TfidfVectorizer
+tfidf_vectorizer = TfidfVectorizer()
+
+# Fit and transform the documents
+X_tfidf = tfidf_vectorizer.fit_transform(documents)
+
+feature_names = tfidf_vectorizer.get_feature_names_out()
+
+tfidf_matrix = X_tfidf.toarray()
+
+print("Feature Names (Words):")
+print(feature_names)
+
+print("\nTF-IDF Matrix:")
+print(tfidf_matrix)
