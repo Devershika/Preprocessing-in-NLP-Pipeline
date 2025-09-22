@@ -1,0 +1,26 @@
+Part A: Count Vectorizer
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+# List of sentences
+sentences = [
+    "I love machine learning.",
+    "Machine learning is fascinating.",
+    "I love data science and machine learning."
+]
+
+# Initialize CountVectorizer
+vectorizer = CountVectorizer()
+
+# Fit and transform the sentences
+X = vectorizer.fit_transform(sentences)
+
+feature_names = vectorizer.get_feature_names_out()
+
+word_count_matrix = X.toarray()
+
+print("Feature Names (Words):")
+print(feature_names)
+
+print("\nWord Count Matrix:")
+print(word_count_matrix)
